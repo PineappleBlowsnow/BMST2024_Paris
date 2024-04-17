@@ -11,7 +11,6 @@ model BMSTmodel
 
 global {
 	file shape_file_hospitals <- file("../includes/soins.shp");
-	file shape_file_tram <- file("../includes/tramway.shp");
 	file shape_tpg_stops <- file("../includes/tpg_stops.shp");
 	geometry shape <- envelope(shape_file_hospitals);
 	geometry shape_stops <- envelope(shape_tpg_stops);
