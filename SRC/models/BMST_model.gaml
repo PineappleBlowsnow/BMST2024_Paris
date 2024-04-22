@@ -285,6 +285,11 @@ species people {
 				time <- time + int(abs((self.location distance_to choix.location)/step));
 				time_to_go_to_hospital <- time_to_go_to_hospital + time;
 				number_concerned <- number_concerned + 1;
+				if self.category = "elder" {number_elder_concerned <- number_elder_concerned + 1;
+							    time_to_go_to_hospital_elder <- time_to_go_to_hospital_elder + time;}
+				else {number_adult_concerned <- number_adult_concerned + 1;
+				      time_to_go_to_hospital_adult <- time_to_go_to_hospital_adult;}
+
 				location <- choix.address;
 				add self to:choix.patients;}}
 	}
