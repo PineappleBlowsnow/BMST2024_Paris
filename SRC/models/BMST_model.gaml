@@ -88,14 +88,18 @@ global {
 		
 		
   	reflex saving_data{
-		save ("cycle :" + cycle + "Population :" + population + "portion infected :" +
-			 (people_contaminated/population) + "number_elder :" + length(people where (each.category = "elder")) + "elder_infected :" +
-			 length(people where (each.category = "elder" and each.state = "infected")) + "purcentage_elder_infected"+ length(people where (each.category = "elder" and each.state = "infected"))/people_contaminated + "number_adult :" + length(people where (each.category = "adult")) +
-			 "adult_infected" + length(people where (each.category = "adult" and each.state = "infected")) + "purcentage_elder_infected"+ length(people where (each.category = "elder" and each.state = "infected"))/people_contaminated 
-			 + "average_time_to_go_to_hospital :" + (time_to_go_to_hospital/(number_concerned+0.1))
-			 + "number_hospitals :" + length(hospital) + "number_stops :" + length(tpg_stop)) to:"res.txt" rewrite: (cycle = 0)? true : false;
+
+	save ("cycle :" + cycle + " Population :" + population + " portion infected :" + (people_contaminated/population) + " number_elder :" + length(people where (each.category = "elder")) + " elder_infected :" +
+
+	length(people where (each.category = "elder" and each.state = "infected")) + " percentage_elder_infected"+ length(people where (each.category = "elder" and each.state = "infected"))/people_contaminated + " number_adult :" + length(people where (each.category = "adult")) +
+
+	" adult_infected " + length(people where (each.category = "adult" and each.state = "infected")) + " percentage_adult_infected"+ length(people where (each.category = "adult" and each.state = "infected"))/people_contaminated
+
+	+ " average_time_to_go_to_hospital :" + (time_to_go_to_hospital/(number_concerned+0.1))+ " average_time_to_go_to_hospital_elder : " + (time_to_go_to_hospital_elder/(number_elder_concerned+0.1))+ " average_time_to_go_to_hospital :" + (time_to_go_to_hospital_adult/(number_adult_concerned+0.1))
+
+	+ " number_hospitals :" + length(hospital) + " number_stops :" + length(tpg_stop)) to:"res.txt" rewrite: (cycle = 0)? true : false;
+
 	}
-	
 
 	reflex stop_simulation when: (people_sane = 0) or (people_contaminated = 0){
 		do pause;
