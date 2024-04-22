@@ -12,18 +12,25 @@ model BMSTmodel
 global {
 	file shape_file_hospitals <- file("../includes/soins.shp");
 	file shape_tpg_stops <- file("../includes/tpg_stops.shp");
-	geometry shape <- envelope(shape_file_hospitals);
-	geometry shape_stops <- envelope(shape_tpg_stops);
+	
+	float proba_cure <- 0.8;
+	float cran <- 900.0;
+
 	int people_sane <- 0 update: length(people where (each.state = "healthy"));
 	int people_contaminated <- 0 update: length(people where (each.state = "infected"));
 	int population <- 800 update: people_sane + people_contaminated;
+
 	int time_to_go_to_hospital <- 0;
+	int time_to_go_to_hospital_elder <- 0;
+	int time_to_go_to_hospital_adult <- 0;
+
 	int number_concerned <-0;
-	float proba_cure <- 0.8;
-	float cran <- 900.0;
-	list<string> line_cross_hospital <- nil;
+	int number_elder_concerned <- 0;
+	int number_adult_concerned <- 0;
 	
+	list<string> line_cross_hospital <- nil;
 	graph the_graph;
+
 	
 	init {
 		create hospital from: shape_file_hospitals{address <- self.location;
@@ -49,7 +56,7 @@ global {
 		loop h over: hospital{
 		if flip(0.2){ h.capacity <- h.capacity + 50;}}
 		
-		if flip(100/cycle){
+		if flip(10/cycle){
 			list<string> lines <- nil;
 			loop t over: tpg_stop{  if !(lines contains t.line){ add t.line to: lines;} }
 			
@@ -183,14 +190,14 @@ species people {
 	 	               choose_tram <- 0.3;
 	 	               step <- 100.0;
 	 	               state <- "healthy";
-	 	               if flip(0.05){state <- "infected";} }
+	 	               if flip(0.005){state <- "infected";} }
 	 	 else {category <- "elder";
 	 	               get_contaminate <- 0.016;
 	 	               go_see_friend <- 0.1;
 	 	               choose_tram <- 0.8;
 	 	               step <- 50.0;
 	 	               state <- "healthy";
-	 	               if flip(0.2){state <- "infected";}}
+	 	               if flip(0.5){state <- "infected";}}
 	}
 	
 	reflex infection when: (state != "healthy") {
